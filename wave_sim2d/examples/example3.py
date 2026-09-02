@@ -52,8 +52,8 @@ class MovingCharge(sim.SceneObject):
         fade_in = math.sin(min(t*0.1, math.pi/2))
 
         # write the moving charge to the field
-        x = self.x + math.sin(self.frequency * t*0.05)*200
-        y = self.y + math.sin(self.frequency * t)*self.amplitude
+        x = round(self.x + math.sin(self.frequency * t*0.05)*200)
+        y = round(self.y + math.sin(self.frequency * t)*self.amplitude)
 
         # copy source shape to current position into field
         wh = self.source_array.shape[1]//2
