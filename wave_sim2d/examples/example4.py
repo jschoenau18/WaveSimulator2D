@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))  # noqa
 
 import cv2
 import numpy as np
