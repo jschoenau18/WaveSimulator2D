@@ -36,9 +36,10 @@ They can be combined to build complex and time dependent simulations. The refact
 The old image based scene description is still available as a scene object. You can continue to use the convenience of an image editing software and create simulations
 without much programming.
 
-###  Image Scene Decsription Usage ###
+### Image Scene Description Usage
 
 When using the 'StaticImageScene' class the simulation scenes can given as an 8Bit RGB image with the following channel semantics:
+
 * Red:   The Refractive index times 100 (for refractive index 1.5 you would use value 150)
 * Green: Each pixel with a green value above 0 is a sinusoidal wave source. The green value defines its frequency.
 * Blue:  Absorbtion field. Larger values correspond to higher dampening of the waves, use graduated transitions to avoid reflections
@@ -49,7 +50,7 @@ WARNING: Do not use anti-aliasing for the green channel ! The shades produced ar
     <img src="images/source_antialiasing.png" alt="Example Image 5" width="50%">
 </div>
 
-### Recommended Installation ###
+### Recommended Installation
 
 1. Install Python and PyCharm IDE
 2. Clone the Project to you hard disk
@@ -58,10 +59,9 @@ WARNING: Do not use anti-aliasing for the green channel ! The shades produced ar
 5. Right click on one of the examples in wave_sim2d/examples and select run
 
 NOTE: If you have issues installing the `cupy` library
-1. Make sure you have the `nvidia-cuda-toolkit` installed. 
+
+1. Make sure you have the `nvidia-cuda-toolkit` installed.
 You can check it by running `nvcc --version`.
-1. In the *requirements.txt* file, replace `cupy` by `cupy-cuda[version-number]x`. 
+1. In the *requirements.txt* file, replace `cupy` by `cupy-cuda[version-number]x`.
    Where the version number displayed when running `nvcc --version` (example: `cupy-cuda11x`).
-
-
 

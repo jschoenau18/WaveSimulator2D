@@ -15,7 +15,10 @@ def build_scene(scene_image_path):
     This example uses the 'old' image scene description. See 'StaticImageScene' for more information.
     """
     # load scene image
-    scene_image = cv2.cvtColor(cv2.imread(scene_image_path), cv2.COLOR_BGR2RGB)
+    scene_image_raw = cv2.imread(scene_image_path)
+    if scene_image_raw is None:
+        raise FileNotFoundError(f"could not load scene image: {scene_image_path}")
+    scene_image = cv2.cvtColor(scene_image_raw, cv2.COLOR_BGR2RGB)
 
     # create the scene object list with an 'StaticImageScene' entry as the only scene object
     # more scene objects can be added to the list to build more complex scenes

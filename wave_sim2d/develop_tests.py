@@ -1,14 +1,17 @@
-import wave_visualizer
-import wave_visualizer as vis
-import wave_simulation as sim
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))  # noqa
+
+import wave_sim2d.wave_visualizer as vis
+import wave_sim2d.wave_simulation as sim
 import numpy as np
 import cv2
 import math
 import json
-from scene_objects.static_dampening import StaticDampening
-from scene_objects.static_refractive_index import StaticRefractiveIndex
-from scene_objects.static_image_scene import StaticImageScene
-from scene_objects.source import PointSource, ModulatorSmoothSquare, ModulatorDiscreteSignal
+from wave_sim2d.scene_objects.static_dampening import StaticDampening
+from wave_sim2d.scene_objects.static_refractive_index import StaticRefractiveIndex
+from wave_sim2d.scene_objects.static_image_scene import StaticImageScene
+from wave_sim2d.scene_objects.source import PointSource, ModulatorSmoothSquare, ModulatorDiscreteSignal
 
 
 def build_example_scene1(scene_image):
@@ -51,25 +54,30 @@ def simulate(scene_image_fn, num_iterations,
     np.random.seed(0)
 
     # load scene image
-    scene_image = cv2.cvtColor(cv2.imread(scene_image_fn), cv2.COLOR_BGR2RGB)
+    scene_image_raw = cv2.imread(scene_image_fn)
+    if scene_image_raw is None:
+        raise FileNotFoundError(f"could not load scene image: {scene_image_fn}")
+    scene_image = cv2.cvtColor(scene_image_raw, cv2.COLOR_BGR2RGB)
 
     background_image = None
     if background_image_fn is not None:
         background_image = cv2.imread(background_image_fn)
+        if background_image is None:
+            raise FileNotFoundError(f"could not load background image: {background_image_fn}")
         background_image = cv2.resize(background_image, (scene_image.shape[1], scene_image.shape[0]))
 
     # create simulator and visualizer objects
-    simulator = sim.WaveSimulator2D(scene_image.shape[1], scene_image.shape[0])
+    simulator = sim.WaveSimulator2D(scene_image.shape[1], scene_image.shape[0],
+                                     build_example_scene2(scene_image.shape[1], scene_image.shape[0]))
     visualizer = vis.WaveVisualizer(field_colormap=field_colormap, intensity_colormap=intensity_colormap)
 
-    # build simulation scene
-    simulator.scene_objects = build_example_scene2(scene_image.shape[1], scene_image.shape[0])
-
     # create video writers
+    video_writer1 = None
+    video_writer2 = None
     if write_videos:
-        video_writer1 = cv2.VideoWriter('simulation_field.avi', cv2.VideoWriter_fourcc(*'FFV1'),
+        video_writer1 = cv2.VideoWriter('simulation_field.avi', cv2.VideoWriter_fourcc(*'FFV1'),  # type: ignore[attr-defined]
                                        60, (scene_image.shape[1], scene_image.shape[0]))
-        video_writer2 = cv2.VideoWriter('simulation_intensity.avi', cv2.VideoWriter_fourcc(*'FFV1'),
+        video_writer2 = cv2.VideoWriter('simulation_intensity.avi', cv2.VideoWriter_fourcc(*'FFV1'),  # type: ignore[attr-defined]
                                        60, (scene_image.shape[1], scene_image.shape[0]))
 
     # run simulation
@@ -91,7 +99,7 @@ def simulate(scene_image_fn, num_iterations,
             cv2.imshow("Wave Simulation", frame_field) #cv2.resize(frame_int, dsize=(1024, 1024)))
             cv2.waitKey(1)
 
-            if write_videos:
+            if video_writer1 is not None and video_writer2 is not None:
                 video_writer1.write(frame_field)
                 video_writer2.write(frame_int)
 
@@ -105,7 +113,7 @@ if __name__ == "__main__":
 
     # increase simulation_steps_per_frame to better utilize GPU
     # good colormaps for field: RdBu[invert=True], colormap_wave1, colormap_wave2, colormap_wave4, icefire
-    simulate('../exxample_data/scene_lens_doubleslit.png',
+    simulate(os.path.join(os.path.dirname(__file__), '../example_data/scene_lens_doubleslit.png'),
              20000,
              simulation_steps_per_frame=16,
              write_videos=True,

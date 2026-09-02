@@ -4,8 +4,8 @@ back to numpy/scipy (CPU) so the simulator also runs on machines without an
 NVIDIA GPU, e.g. macOS.
 """
 try:
-    import cupy as cp
-    import cupyx.scipy.signal as cp_signal
+    import cupy as cp  # type: ignore[import-not-found]
+    import cupyx.scipy.signal as cp_signal  # type: ignore[import-not-found]
 
     def to_numpy(arr):
         """ copy an array off the GPU """

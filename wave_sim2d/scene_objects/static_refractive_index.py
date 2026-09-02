@@ -110,6 +110,7 @@ class StaticRefractiveIndexPolygon(SceneObject):
 
     def render(self, field: cp.ndarray, wave_speed_field: cp.ndarray, dampening_field: cp.ndarray):
         coords, mask_values = self._create_polygon_data(wave_speed_field.shape)
+        assert mask_values is not None
 
         # Use advanced indexing to update the field and perform alpha blending
         bg_wave_speed = wave_speed_field[coords[0], coords[1]]

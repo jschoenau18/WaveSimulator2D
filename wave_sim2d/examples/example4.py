@@ -57,9 +57,11 @@ def main():
     visualizer = vis.WaveVisualizer(field_colormap=field_colormap, intensity_colormap=intensity_colormap)
 
     # optional create video writers
+    video_writer1 = None
+    video_writer2 = None
     if write_videos:
-        video_writer1 = cv2.VideoWriter('simulation_field.avi', cv2.VideoWriter_fourcc(*'FFV1'), 60, (w, h))
-        video_writer2 = cv2.VideoWriter('simulation_intensity.avi', cv2.VideoWriter_fourcc(*'FFV1'), 60, (w, h))
+        video_writer1 = cv2.VideoWriter('simulation_field.avi', cv2.VideoWriter_fourcc(*'FFV1'), 60, (w, h))  # type: ignore[attr-defined]
+        video_writer2 = cv2.VideoWriter('simulation_intensity.avi', cv2.VideoWriter_fourcc(*'FFV1'), 60, (w, h))  # type: ignore[attr-defined]
 
     # run simulation
     for i in range(100000):
@@ -75,7 +77,7 @@ def main():
         frame_int = visualizer.render_intensity(1.0)
         # cv2.imshow("Wave Simulation Intensity", frame_int)
 
-        if write_videos and (i % write_video_frame_every) == 0:
+        if video_writer1 is not None and video_writer2 is not None and (i % write_video_frame_every) == 0:
             video_writer1.write(frame_field)
             video_writer2.write(frame_int)
 
