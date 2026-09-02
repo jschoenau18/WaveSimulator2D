@@ -1,5 +1,5 @@
 from wave_sim2d.wave_simulation import SceneObject
-import cupy as cp
+from wave_sim2d.gpu import cp
 import numpy as np
 import cv2
 

@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))  # noqa
 
 import numpy as np
-import cupy as cp
+from wave_sim2d.gpu import cp
 import math
 import cv2
 

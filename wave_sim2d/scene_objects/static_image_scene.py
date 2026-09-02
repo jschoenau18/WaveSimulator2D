@@ -1,7 +1,7 @@
 from wave_sim2d.wave_simulation import SceneObject
 
 import numpy as np
-import cupy as cp
+from wave_sim2d.gpu import cp
 from wave_sim2d.scene_objects.static_dampening import StaticDampening
 from wave_sim2d.scene_objects.static_refractive_index import StaticRefractiveIndex
 

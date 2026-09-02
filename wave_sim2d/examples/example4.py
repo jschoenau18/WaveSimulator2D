@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../'))  # noqa
 
 import cv2
 import numpy as np
-import cupy as cp
+from wave_sim2d.gpu import cp, to_numpy
 import wave_sim2d.wave_visualizer as vis
 import wave_sim2d.wave_simulation as sim
 from wave_sim2d.scene_objects.source import *
@@ -37,7 +37,7 @@ def build_scene():
 
 def show_field(field, brightness_scale):
     gray = (cp.clip(field*brightness_scale, -1.0, 1.0) * 127 + 127).astype(np.uint8)
-    img = gray.get()
+    img = to_numpy(gray)
     cv2.imshow("Strain Simulation Field", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
 

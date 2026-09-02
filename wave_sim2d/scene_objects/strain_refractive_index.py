@@ -1,6 +1,5 @@
 from wave_sim2d.wave_simulation import SceneObject
-import cupy as cp
-import cupyx.scipy.signal
+from wave_sim2d.gpu import cp, cp_signal
 import numpy as np
 
 class StrainRefractiveIndex(SceneObject):
@@ -24,8 +23,8 @@ class StrainRefractiveIndex(SceneObject):
 
     def render(self, field: cp.ndarray, wave_speed_field: cp.ndarray, dampening_field: cp.ndarray):
         # compute strain
-        du_dx = cupyx.scipy.signal.convolve2d(field, self.du_dx_kernel, mode='same', boundary='fill')
-        du_dy = cupyx.scipy.signal.convolve2d(field, self.du_dy_kernel, mode='same', boundary='fill')
+        du_dx = cp_signal.convolve2d(field, self.du_dx_kernel, mode='same', boundary='fill')
+        du_dy = cp_signal.convolve2d(field, self.du_dy_kernel, mode='same', boundary='fill')
 
         self.strain_field = cp.sqrt(du_dx**2 + du_dy**2)
 

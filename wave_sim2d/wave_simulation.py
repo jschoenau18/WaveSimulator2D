@@ -1,7 +1,5 @@
-import cupy
 import numpy as np
-import cupy as cp
-import cupyx.scipy.signal
+from wave_sim2d.gpu import cp, cp_signal
 from abc import ABC, abstractmethod
 
 
@@ -12,12 +10,12 @@ class SceneObject(ABC):
     simulated field and draw their contribution to the wave speed field and dampening field each frame """
 
     @abstractmethod
-    def render(self, field: cupy.ndarray, wave_speed_field: cupy.ndarray, dampening_field: cupy.ndarray):
+    def render(self, field: cp.ndarray, wave_speed_field: cp.ndarray, dampening_field: cp.ndarray):
         """ renders the scene objects contribution to the wave speed field and dampening field """
         pass
 
     @abstractmethod
-    def update_field(self, field: cupy.ndarray, t):
+    def update_field(self, field: cp.ndarray, t):
         """ performs updates to the field itself, e.g. for adding sources """
         pass
 
@@ -79,7 +77,7 @@ class WaveSimulator2D:
         Update the simulation field based on the wave equation.
         """
         # calculate laplacian using convolution
-        laplacian = cupyx.scipy.signal.convolve2d(self.u, self.laplacian_kernel, mode='same', boundary='fill')
+        laplacian = cp_signal.convolve2d(self.u, self.laplacian_kernel, mode='same', boundary='fill')
 
         # update field
         v = (self.u - self.u_prev) * self.d * self.global_dampening

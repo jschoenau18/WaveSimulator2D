@@ -1,5 +1,5 @@
 import numpy as np
-import cupy as cp
+from wave_sim2d.gpu import cp, to_numpy
 import cv2
 import matplotlib.pyplot
 
@@ -31,7 +31,7 @@ class WaveVisualizer:
 
     def render_intensity(self, brightness_scale=1.0, exp=0.5, overlay_visualization=True):
         gray = (cp.clip((self.intensity**exp)*brightness_scale, 0.0, 1.0) * 254.0).astype(np.uint8)
-        img = self.intensity_colormap[gray].get() if self.intensity_colormap is not None else gray.get()
+        img = to_numpy(self.intensity_colormap[gray]) if self.intensity_colormap is not None else to_numpy(gray)
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         if overlay_visualization:
             img = cv2.add(img, self.visualization_image)
@@ -39,7 +39,7 @@ class WaveVisualizer:
 
     def render_field(self, brightness_scale=1.0, overlay_visualization=True):
         gray = (cp.clip(self.field*brightness_scale, -1.0, 1.0) * 127 + 127).astype(np.uint8)
-        img = self.field_colormap[gray].get() if self.field_colormap is not None else gray.get()
+        img = to_numpy(self.field_colormap[gray]) if self.field_colormap is not None else to_numpy(gray)
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         if overlay_visualization:
             img = cv2.add(img, self.visualization_image)
